@@ -21,5 +21,10 @@ todos = db.todos
 # routes:
 @app.route('/', methods=('GET', 'POST'))
 def index():
-    return render_template('index.html')
+    if request.method=='POST':
+        content = request.form['content']
+        priority = request.form['priority']
+        todos.insert_one({'content': content, 'priority': priority})
+        return redirect(url_for('index'))
 
+    return render_template('index.html')
