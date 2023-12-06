@@ -17,3 +17,9 @@ client = MongoClient(db_key)
 # get database and collection
 db = client.flask_db
 todos = db.todos
+
+# routes:
+@app.route('/', methods=('GET', 'POST'))
+def index():
+    return render_template('index.html')
+
