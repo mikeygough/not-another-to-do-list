@@ -24,13 +24,24 @@ def index():
     if request.method=='POST':
         content = request.form['content']
         degree = request.form['priority']
-        todos.insert_one({'content': content, 'priority': degree})
+        todos.insert_one({'content': content, 'priority': degree, 'complete': False})
         return redirect(url_for('index'))
-
-    all_todos = todos.find().sort('content')
-    return render_template('index.html', todos=all_todos)
+    
+    # sort by alphabetical english
+    incomplete_todos = list(todos.find({"complete": False}).collation({'locale': 'en'}).sort('content'))
+    complete_todos = list(todos.find({"complete": True}).collation({'locale': 'en'}).sort('content'))
+    
+    context = {"incomplete_todos": incomplete_todos, "complete_todos": complete_todos}
+    return render_template('index.html', **context)
 
 @app.post('/<id>/delete/')
 def delete(id):
     todos.delete_one({"_id": ObjectId(id)})
+    return redirect(url_for('index'))
+
+@app.post('/<id>/complete/')
+def complete(id):
+    filter = { '_id': ObjectId(id) }
+    new_values = { '$set': { 'complete': True } }
+    todos.update_one(filter, new_values)
     return redirect(url_for('index'))

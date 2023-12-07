@@ -9,6 +9,11 @@ body {
 	background-color: #eee;
 }
 
+.button-container {
+  display: flex;
+  gap: 10px;
+}
+
 button, input[type=submit] {
 	padding: 0.5rem;
 	background-color: #000;
@@ -28,4 +33,12 @@ input[type=text] {
 
 .Important {
 	color: red;
+}
+
+.complete-todo{
+  background-color: green !important;
+}
+
+.delete-todo {
+  background-color: red !important;
 }
